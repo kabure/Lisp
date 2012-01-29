@@ -71,6 +71,11 @@
 (defun hladaj (ciel citac vypis metoda)
   
   (unless (equal *open* '())
+    (if (= *hlbka* (caar *open*))
+        (progn 
+          (setf *next-level* (append *next-level* (pop *open*)))
+           (hladaj ciel citac vypis metoda))
+      
     (let* ((uzol-na-expanziu (pop *open*))
 	   (nove-stavy (unless (member uzol-na-expanziu *close*
 				       :test #'rovnake-stavy-p)
@@ -84,9 +89,12 @@
 	(:df (setf *open* (append (ocisluj nove-stavy citac uzol-na-expanziu)
 					*open*))))
       (informuj uzol-na-expanziu nove-stavy vypis)
+      
       (if (member ciel nove-stavy :test #'equal)
 	  t
-	  (hladaj ciel citac vypis metoda)))))
+        (hladaj ciel citac vypis metoda)))
+     )
+    ))
 
 (defun ries (start ciel *hlbka* &key (vypis 1) (metoda :df))
   (setf *aktualna-hlbka* 0)
