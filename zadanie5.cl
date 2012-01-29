@@ -25,6 +25,7 @@
 
 (defparameter *open* '())
 (defparameter *close* '())
+(defparameter *next-level* '())
 (defvar *hlbka* 0)
 (defvar *aktualna-hlbka* 0)
 
@@ -68,8 +69,7 @@
 
 
 (defun hladaj (ciel citac vypis metoda)
-  (setf *aktualna-hlbka* (1+ *aktualna-hlbka*))
-
+  
   (unless (equal *open* '())
     (let* ((uzol-na-expanziu (pop *open*))
 	   (nove-stavy (unless (member uzol-na-expanziu *close*
@@ -77,6 +77,7 @@
                   (expanduj (cdr (cdr uzol-na-expanziu))))))
       (if (null nove-stavy)(decf *aktualna-hlbka*))
       (push uzol-na-expanziu *close*)
+      (setf *aktualna-hlbka* (1+ *aktualna-hlbka*))
       (ccase metoda
 	(:bf (setf *open* (append *open*
 				  (ocisluj nove-stavy citac uzol-na-expanziu))))
@@ -89,6 +90,7 @@
 
 (defun ries (start ciel *hlbka* &key (vypis 1) (metoda :df))
   (setf *aktualna-hlbka* 0)
+  (setf *next-level* '())
   (setf *open* (list (cons *aktualna-hlbka*(cons '(0 . 0) start))))
   (setf *close* '())
   (unless (equal start ciel) (hladaj ciel (generuj-citac) vypis metoda))
