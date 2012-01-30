@@ -33,7 +33,7 @@
 (defun informuj (stav-na-expanziu nove-stavy mod)
   (when (> mod 0)
     (format t "~%exp: ~a~%" stav-na-expanziu)
-    (format t "  gen: ~{ ~a ~}" nove-stavy))
+    (format t "  gen: ~{ ~a ~}~%" nove-stavy))
   (when (> mod 1)
     (format t "~%  open:  ~{~a~^ ~a~^ ~a~^ ~a ~#[ ~:;~%         ~]~}" *open*)
     (format t "~%  close: ~{~a~^ ~a~^ ~a~^ ~a ~#[ ~:;~%         ~]~}" *close*)))
@@ -93,7 +93,7 @@
       (informuj uzol-na-expanziu nove-stavy vypis)
       
       (if (member ciel nove-stavy :test #'equal)
-          (vytlac-cestu (cons t(cons t ciel)))
+          t
 	  
         (hladaj ciel citac vypis metoda))
      
@@ -124,18 +124,6 @@
   (setf citac (generuj-citac))
   
   (unless (equal start ciel) (hladaj ciel citac vypis metoda))
-  (if (eql *open* '()) 
-  (progn (if (eql *next-level* '())
-    (format t "neviem najst riesenie~%") 
-    (progn 
-    (format t "neviem najst riesenie pri hlbke ~a~%" *hlbka*)
-    (setf *hlbka* (+ 1 *hlbka*))
-    (format t "hlbka prehladavania sa zvisila na ~a~%" *hlbka*)
-    (setf *next-level* (reverse *next-level*))
-      (setf *open* (append *next-level* *open*))
-      (setf *next-level* '())
-      (hladaj ciel citac vypis metoda)    
-    ))                                                  
-    )
-    t)
-  )
+  (if (eql *open* '()) (format t "neviem najst riesenie~%")
+    (vytlac-cestu (cons t(cons t ciel))))
+  ) 
