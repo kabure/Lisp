@@ -27,7 +27,7 @@
 (defparameter *close* '())
 (defparameter *next-level* '())
 (defvar *hlbka* 0)
-;;;(defvar *aktualna-hlbka* 0)
+(defvar citac)
 
 
 (defun informuj (stav-na-expanziu nove-stavy mod)
@@ -93,7 +93,8 @@
       (informuj uzol-na-expanziu nove-stavy vypis)
       
       (if (member ciel nove-stavy :test #'equal)
-	  t
+          (progn (print *open*)
+	  t)
         (hladaj ciel citac vypis metoda))
      
     ))))
@@ -104,7 +105,22 @@
   (setf *next-level* '())
   (setf *open* (list (cons 0(cons '(0 . 0) start))))
   (setf *close* '())
-  (unless (equal start ciel) (hladaj ciel (generuj-citac) vypis metoda))
-  (if (eql *open* '()) (format t "neviem najst riesenie~%")    ;;; tu doplnit podmienku o zvyseni hlbky ak next-level and open empty tak nevei naist riesenie 
-    (vytlac-cestu (cons t(cons t ciel))))
+  (setf citac (generuj-citac))
+  (unless (equal start ciel) (hladaj ciel citac vypis metoda))
+  (if (eql *open* '()) 
+  (progn (if (eql *next-level* '())
+    (format t "neviem najst riesenie~%") 
+    (progn 
+    (format t "neviem najst riesenie pri hlbke ~a~%" *hlbka*)
+    (setf *hlbka* (+ 5 *hlbka*))
+    (format t "hlbka prehladavania sa zvisila na ~a~%" *hlbka*)
+    (setf *next-level* (reverse *next-level*))
+      (setf *open* (append *next-level* *open*))
+      (setf *next-level* '())
+      (hladaj ciel citac vypis metoda)    
+    ))                                                  
+    )
+    (progn
+      (print 'tusom)
+    (vytlac-cestu (cons t(cons t ciel)))))
   )
