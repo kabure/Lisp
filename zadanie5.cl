@@ -93,8 +93,8 @@
       (informuj uzol-na-expanziu nove-stavy vypis)
       
       (if (member ciel nove-stavy :test #'equal)
-          (progn (print *open*)
-	  t)
+          (vytlac-cestu (cons t(cons t ciel)))
+	  
         (hladaj ciel citac vypis metoda))
      
     ))))
@@ -120,7 +120,5 @@
       (hladaj ciel citac vypis metoda)    
     ))                                                  
     )
-    (progn
-      (print 'tusom)
-    (vytlac-cestu (cons t(cons t ciel)))))
+    t)
   )
