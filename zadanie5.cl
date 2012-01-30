@@ -70,14 +70,11 @@
 
 (defun hladaj (ciel citac vypis metoda)
   
-  
-      (print 'next-level)
-      (print *next-level*)
-  
-  (unless (equal *open* '())
+    (unless (equal *open* '())
     (if (= *hlbka* (caar *open*))
         (let* ((temp (pop *open*)))
-          (setf *next-level* (append *next-level* temp))
+           ;;;(setf *next-level* (append *next-level* temp))
+          (push temp *next-level*)
           (hladaj ciel citac vypis metoda))
       
     (let* ((uzol-na-expanziu (pop *open*))
@@ -87,8 +84,6 @@
     ;;;  (if (null nove-stavy)(decf *aktualna-hlbka*))
       (push uzol-na-expanziu *close*)
      ;;; (setf *aktualna-hlbka* (car uzol-na-expanziu))
-      (print 'open)
-      (print *open*)
       ;;; (setf *aktualna-hlbka* (1+ *aktualna-hlbka*))
       (ccase metoda
 	(:bf (setf *open* (append *open*
@@ -110,6 +105,6 @@
   (setf *open* (list (cons 0(cons '(0 . 0) start))))
   (setf *close* '())
   (unless (equal start ciel) (hladaj ciel (generuj-citac) vypis metoda))
-  (if (eql *open* '()) (format t "neviem najst riesenie~%")
+  (if (eql *open* '()) (format t "neviem najst riesenie~%")    ;;; tu doplnit podmienku o zvyseni hlbky ak next-level and open empty tak nevei naist riesenie 
     (vytlac-cestu (cons t(cons t ciel))))
   )
