@@ -27,7 +27,7 @@
 (defparameter *close* '())
 (defparameter *next-level* '())
 (defvar *hlbka* 0)
-(defvar *aktualna-hlbka* 0)
+;;;(defvar *aktualna-hlbka* 0)
 
 
 (defun informuj (stav-na-expanziu nove-stavy mod)
@@ -47,9 +47,10 @@
     (lambda () (incf pamat))))
 
 (defun ocisluj (stavy citac predok)
-  (let ((predok-id (caar (cdr predok))))
+  (let ((predok-id (caar (cdr predok)))
+        (aktual-hlbka (car predok)))
    ;;; (print predok-id)
-    (mapcar #'(lambda (stav) (cons *aktualna-hlbka*(cons (cons (funcall citac) predok-id) stav)))
+    (mapcar #'(lambda (stav) (cons (1+ aktual-hlbka) (cons (cons (funcall citac) predok-id) stav)))
 	    stavy)))
 
 (defun vytlac-cestu (ciel)
@@ -67,22 +68,28 @@
 	       cesta)))))
 
 
-
 (defun hladaj (ciel citac vypis metoda)
+  
+  
+      (print 'next-level)
+      (print *next-level*)
   
   (unless (equal *open* '())
     (if (= *hlbka* (caar *open*))
-        (progn 
-          (setf *next-level* (append *next-level* (pop *open*)))
-           (hladaj ciel citac vypis metoda))
+        (let* ((temp (pop *open*)))
+          (setf *next-level* (append *next-level* temp))
+          (hladaj ciel citac vypis metoda))
       
     (let* ((uzol-na-expanziu (pop *open*))
 	   (nove-stavy (unless (member uzol-na-expanziu *close*
 				       :test #'rovnake-stavy-p)
                   (expanduj (cdr (cdr uzol-na-expanziu))))))
-      (if (null nove-stavy)(decf *aktualna-hlbka*))
+    ;;;  (if (null nove-stavy)(decf *aktualna-hlbka*))
       (push uzol-na-expanziu *close*)
-      (setf *aktualna-hlbka* (1+ *aktualna-hlbka*))
+     ;;; (setf *aktualna-hlbka* (car uzol-na-expanziu))
+      (print 'open)
+      (print *open*)
+      ;;; (setf *aktualna-hlbka* (1+ *aktualna-hlbka*))
       (ccase metoda
 	(:bf (setf *open* (append *open*
 				  (ocisluj nove-stavy citac uzol-na-expanziu))))
@@ -92,14 +99,15 @@
       
       (if (member ciel nove-stavy :test #'equal)
 	  t
-        (hladaj ciel citac vypis metoda)))
-     )
-    ))
+        (hladaj ciel citac vypis metoda))
+     
+    ))))
 
 (defun ries (start ciel *hlbka* &key (vypis 1) (metoda :df))
-  (setf *aktualna-hlbka* 0)
+ ;;; (setf *aktualna-hlbka* 0)
+  (decf *hlbka*)
   (setf *next-level* '())
-  (setf *open* (list (cons *aktualna-hlbka*(cons '(0 . 0) start))))
+  (setf *open* (list (cons 0(cons '(0 . 0) start))))
   (setf *close* '())
   (unless (equal start ciel) (hladaj ciel (generuj-citac) vypis metoda))
   (if (eql *open* '()) (format t "neviem najst riesenie~%")
