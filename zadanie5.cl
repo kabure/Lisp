@@ -97,7 +97,23 @@
 	  
         (hladaj ciel citac vypis metoda))
      
-    ))))
+      )))
+  (if (eql *open* '()) 
+  (progn (if (eql *next-level* '())
+    (format t "neviem najst riesenie~%") 
+    (progn 
+    (format t "neviem najst riesenie pri hlbke ~a~%" *hlbka*)
+    (setf *hlbka* (+ 1 *hlbka*))
+    (format t "hlbka prehladavania sa zvisila na ~a~%" *hlbka*)
+    (setf *next-level* (reverse *next-level*))
+      (setf *open* (append *next-level* *open*))
+      (setf *next-level* '())
+      (hladaj ciel citac vypis metoda)    
+    ))                                                  
+    )
+    t)
+
+  )
 
 (defun ries (start ciel *hlbka* &key (vypis 1) (metoda :df))
  ;;; (setf *aktualna-hlbka* 0)
@@ -106,13 +122,14 @@
   (setf *open* (list (cons 0(cons '(0 . 0) start))))
   (setf *close* '())
   (setf citac (generuj-citac))
+  
   (unless (equal start ciel) (hladaj ciel citac vypis metoda))
   (if (eql *open* '()) 
   (progn (if (eql *next-level* '())
     (format t "neviem najst riesenie~%") 
     (progn 
     (format t "neviem najst riesenie pri hlbke ~a~%" *hlbka*)
-    (setf *hlbka* (+ 5 *hlbka*))
+    (setf *hlbka* (+ 1 *hlbka*))
     (format t "hlbka prehladavania sa zvisila na ~a~%" *hlbka*)
     (setf *next-level* (reverse *next-level*))
       (setf *open* (append *next-level* *open*))
