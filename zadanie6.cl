@@ -58,7 +58,7 @@
 (defparameter *open* '())
 (defparameter *close* '())
 
-defun novy-uzol (stav &optional (uzol-id nil) (predok-id nil) cena)
+(defun novy-uzol (stav &optional (uzol-id nil) (predok-id nil) cena)
   (list :stav stav :uzol-id uzol-id :predok-id predok-id :cena cena))
 
 (defun najdi-prednajmensieho (zoznam minimum predosly key)
@@ -69,7 +69,7 @@ defun novy-uzol (stav &optional (uzol-id nil) (predok-id nil) cena)
 	  (setf nove-minimum (funcall key (car zoznam)) nova-poloha predosly))
 	(let ((nalez
 	       (najdi-prednajmensieho (cdr zoznam) nove-minimum zoznam key)))
-	  (if (null nalez) nova-poloha nalez))))))
+	  (if (null nalez) nova-poloha nalez)))))
 
 (defun najmensi-dopredu (zoznam &key (key #'identity))
   (let ((najmensi zoznam))
@@ -97,7 +97,7 @@ defun novy-uzol (stav &optional (uzol-id nil) (predok-id nil) cena)
   (abs (- (+ (car stav) (cdr stav)) 
 	  (+ (car ciel) (cdr ciel)))))
 
-defun uzol>stav (uzol) (getf uzol :stav))
+(defun uzol>stav (uzol) (getf uzol :stav))
 (defun uzol>uzol-id (uzol) (getf uzol :uzol-id))
 (defun uzol>predok-id (uzol) (getf uzol :predok-id))
 (defun uzol>cena (uzol) (getf uzol :cena))
@@ -160,7 +160,7 @@ defun uzol>stav (uzol) (getf uzol :stav))
   (let ((cesta (remove-if-not #'(lambda (x) (rovnake-stavy-p x ciel)) *open*)))
     (format t "~{  ~a ~%~}" (zostav-cestu cesta))))
 
-((defun ries (start ciel &key (vypis 0) (metoda :uc))
+(defun ries (start ciel &key (vypis 0) (metoda :uc))
   (setf *open* (list (novy-uzol start 0)))
   (setf *close* '())
   (unless (equal start ciel) (hladaj ciel (generuj-citac) vypis metoda))
