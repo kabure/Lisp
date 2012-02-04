@@ -25,7 +25,7 @@
 
 (defparameter *open* '())
 (defparameter *close* '())
-(defparameter *next-level* '())
+(defvar start)
 (defvar *hlbka* 0)
 (defvar citac)
 
@@ -72,7 +72,7 @@
     (unless (equal *open* '())
     (if (= *hlbka* (caar *open*))
         (let* ((temp (pop *open*)))
-              (push temp *next-level*)
+              (push temp *close*)
           (hladaj ciel citac vypis metoda))
       
     (let* ((uzol-na-expanziu (pop *open*))
@@ -94,17 +94,14 @@
      
       )))
   (if (eql *open* '()) 
-  (progn (if (eql *next-level* '())
-    (format t "neviem najst riesenie~%") 
-    (progn 
-    (format t "neviem najst riesenie pri hlbke ~a~%" *hlbka*)
+      (progn  
+        (format t "neviem najst riesenie pri hlbke ~a~%" *hlbka*)
     (setf *hlbka* (+ 1 *hlbka*))
     (format t "hlbka prehladavania sa zvisila na ~a~%" *hlbka*)
-    (setf *next-level* (reverse *next-level*))
-      (setf *open* (append *next-level* *open*))
-      (setf *next-level* '())
-      (hladaj ciel citac vypis metoda)    
-    ))                                                  
+    (setf *open* (list (cons 0(cons '(0 . 0) start))))
+      (setf *close* '())
+      (hladaj ciel (generuj-citac) vypis metoda)    
+                                                      
     )
     t)
 
